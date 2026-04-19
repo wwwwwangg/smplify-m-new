@@ -1,0 +1,156 @@
+# Comparative Experiments Configuration File
+# Controls which models to train and training parameters
+
+# ========================================
+# Experiment Settings
+# ========================================
+experiment:
+  name: "smplx_model_comparison"
+  output_dir: "comparative_experiments/outputs"
+  log_dir: "comparative_experiments/logs"
+  checkpoint_dir: "comparative_experiments/checkpoints"
+
+# ========================================
+# Model Selection
+# ========================================
+# Available models:
+#   - mlp: Multi-Layer Perceptron (baseline)
+#   - resnet50: ResNet-50
+#   - convnextv2: ConvNeXt V2
+#   - swin: Swin Transformer
+#   - unet: U-Net
+#   - mobilenetv3: MobileNetV3-Small
+#   - cbam_mobilenet: MobileNetV3 with CBAM attention
+models:
+  # Set to true/false to include/exclude models
+  mlp: true
+  resnet50: true
+  convnextv2: true
+  swin: true
+  unet: true
+  mobilenetv3: true
+  cbam_mobilenet: true
+  
+  # Model-specific settings
+  mobilenetv3:
+    pretrained: true
+    ckpt_path: "mobilenetv3-master/smplify_pth/checkpoint-best.pth"
+  
+  cbam_mobilenet:
+    pretrained: false  # Train from scratch or use MobileNetV3 weights
+    use_cbam: true
+
+# ========================================
+# Dataset Settings
+# ========================================
+dataset:
+  # Training data
+  train_img_dir: "data/train_images"
+  train_pkl_dir: "smplx_mobilenet_output/results"  # SMPLify-X output PKL files
+  
+  # Alternative: Use all 616 images (requires running SMPLify-X first)
+  # train_img_dir: "data/images"
+  # train_pkl_dir: "smplx_all_output/results"
+  
+  # Train/val split
+  train_ratio: 0.75  # 75% train, 25% validation
+  seed: 42
+
+# ========================================
+# Training Settings
+# ========================================
+training:
+  # Basic settings
+  epochs: 300
+  batch_size: 4
+  num_workers: 4
+  
+  # Optimizer
+  optimizer: "adamw"
+  learning_rate: 0.001
+  weight_decay: 0.01
+  betas: [0.9, 0.999]
+  
+  # Learning rate scheduler
+  scheduler: "cosine"
+  min_lr: 0.00001
+  warmup_epochs: 10
+  
+  # Loss function
+  loss_type: "smooth_l1"  # Options: smooth_l1, mse, l1
+  
+  # Checkpointing
+  save_freq: 50  # Save checkpoint every N epochs
+  save_best: true  # Save best model based on validation MAE
+  
+  # Logging
+  log_freq: 10  # Log every N epochs
+  print_freq: 1  # Print every N epochs
+
+# ========================================
+# Data Augmentation
+# ========================================
+augmentation:
+  train:
+    random_resized_crop: true
+    crop_scale: [0.8, 1.0]
+    random_horizontal_flip: true
+    flip_prob: 0.5
+    color_jitter: true
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.1
+  
+  val:
+    resize: 256
+    center_crop: 224
+
+# ========================================
+# Image Settings
+# ========================================
+image:
+  input_size: 224
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+  channels: 3
+
+# ========================================
+# SMPL-X Parameter Settings
+# ========================================
+smplx:
+  num_classes: 94  # Total output dimensions
+  param_groups:
+    betas: 16           # Shape parameters
+    global_orient: 3    # Global orientation
+    left_hand: 12       # Left hand pose
+    right_hand: 12      # Right hand pose
+    jaw: 3              # Jaw pose
+    leye: 3             # Left eye pose
+    reye: 3             # Right eye pose
+    expression: 10      # Facial expression
+    body_pose: 32       # Body pose (VPoser latent)
+
+# ========================================
+# Hardware Settings
+# ========================================
+hardware:
+  use_cuda: true
+  device: "cuda"  # cuda or cpu
+  cudnn_benchmark: true
+  mixed_precision: false  # Enable AMP for faster training
+
+# ========================================
+# Evaluation Settings
+# ========================================
+evaluation:
+  metrics:
+    - mae       # Mean Absolute Error
+    - mse       # Mean Squared Error
+    - rmse      # Root Mean Squared Error
+    - per_group # Per-parameter-group errors
+  
+  # Compare all models at the end
+  comparison: true
+  plot_results: true
+  save_csv: true
