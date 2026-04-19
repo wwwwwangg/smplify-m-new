@@ -1,5 +1,7 @@
 # SMPLify-M: Efficient 3D Human Reconstruction and Dynamic Acupoint Mapping Framework
 
+[![DOI](https://zenodo.org/badge/1215046461.svg)](https://doi.org/10.5281/zenodo.19653794)
+
 ## Project Overview
 
 This repository provides the official implementation of the paper:
