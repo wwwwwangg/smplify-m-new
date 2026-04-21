@@ -145,7 +145,12 @@ Where:
 * `img/`: Training images
 * `label/`: Corresponding supervision labels
 
-> **Note**: Due to company data confidentiality, this training dataset is not publicly available.
+> **Note**: Due to company data confidentiality, the proprietary training dataset used in this paper is not publicly available. However, the proposed method can be validated on public datasets:
+> 
+> * **COCO Dataset**: [http://mscoco.org/](http://mscoco.org/) - Common Objects in Context dataset for human pose estimation
+> * **Human3.6M Dataset**: [http://vision.imar.ro/human3.6m/description.php](http://vision.imar.ro/human3.6m/description.php) - Large-scale 3D human pose dataset
+> 
+> These public datasets can be used to train and evaluate the CBAM-MobileNetV3 initialization network and verify the effectiveness of the proposed approach.
 
 ---
 
@@ -171,19 +176,7 @@ This data is used for:
 
 ---
 
-## Model Weights
-
-### CBAM-MobileNetV3 Pre-trained Weights
-
-**Weight download link to be provided**
-
-Please place the downloaded weight files in:
-
-```text
-mobilenetv3-master/smplify_pth_retrain/
-```
-
-### SMPL-X Model Resources
+## Model Resources
 
 Please prepare the following resources yourself:
 
@@ -225,7 +218,7 @@ Follow these steps to reproduce the main experimental results:
 
 1. Download and configure SMPL-X model
 2. Download and configure VPoser model
-3. Download CBAM-MobileNetV3 pre-trained weights
+3. Train CBAM-MobileNetV3 on your own dataset (see Data Organization section)
 
 ---
 
